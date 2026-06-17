@@ -21,7 +21,7 @@ export default function App() {
         setError(response.data.message || 'Property not found.');
       }
     } catch (err) {
-      setError('Failed to connect to the Gateway. Ensure the backend server is running on port 3000.');
+      setError('Failed to connect to the API Gateway. Ensure backend is running.');
       console.error(err);
     } finally {
       setLoading(false);
@@ -29,19 +29,39 @@ export default function App() {
   };
 
   return (
-    <div className="min-h-screen bg-slate-50 text-slate-900 font-sans">
-      <header className="bg-white border-b border-gray-200 py-6 mb-10 shadow-sm">
-        <div className="max-w-4xl mx-auto px-6">
-          <h1 className="text-2xl font-bold text-gray-900 tracking-tight">Stateless GovTech API Gateway</h1>
-          <p className="text-gray-500 mt-1 text-sm">Cook County Integration Prototype</p>
+    <div className="min-h-screen bg-slate-50 text-slate-900 font-sans selection:bg-slate-900 selection:text-white">
+      
+      {/* Minimalist Top Navigation */}
+      <header className="bg-white border-b border-slate-200 sticky top-0 z-10">
+        <div className="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <div className="w-8 h-8 bg-slate-950 rounded flex items-center justify-center">
+              <span className="text-white font-bold font-mono text-xs">API</span>
+            </div>
+            <h1 className="text-xl font-bold text-slate-900 tracking-tight">Stateless Gateway</h1>
+          </div>
+          <div className="text-sm font-medium text-slate-500 bg-slate-100 px-3 py-1 rounded-full">
+            Cook County Prototype
+          </div>
         </div>
       </header>
 
-      <main className="max-w-5xl mx-auto px-6 pb-20">
+      {/* Main Content Area */}
+      <main className="max-w-6xl mx-auto px-6 pt-12 pb-24">
+        
+        <div className="text-center mb-10">
+          <h2 className="text-3xl font-extrabold tracking-tight text-slate-900 sm:text-4xl">
+            Property Intelligence
+          </h2>
+          <p className="mt-4 text-lg text-slate-500 max-w-2xl mx-auto">
+            Bypass legacy architecture. Enter a PIN to instantly aggregate normalized data across multiple assessment vectors.
+          </p>
+        </div>
+
         <SearchBar onSearch={handleSearch} isLoading={loading} />
         
         {error && (
-          <div className="max-w-2xl mx-auto mb-8 p-4 bg-red-50 border border-red-200 text-red-700 rounded-lg text-center">
+          <div className="max-w-2xl mx-auto mb-8 p-4 bg-red-50 border border-red-200 text-red-700 rounded-xl text-center font-medium shadow-sm">
             {error}
           </div>
         )}
