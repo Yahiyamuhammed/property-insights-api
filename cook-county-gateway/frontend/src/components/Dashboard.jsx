@@ -1,74 +1,63 @@
-import { MapPin, User, DollarSign, FileText } from 'lucide-react';
+import { Database } from 'lucide-react';
 
 export default function Dashboard({ data }) {
   if (!data) return null;
 
-  const { meta, taxpayer, latestSale, parcelId } = data;
+  const { parcelId, tabs } = data;
+
+  // A helper to make the internal tab names look pretty on the UI
+  const formatTabName = (modeCode) => {
+    const names = {
+        'profileall_cc': 'General Profile',
+        'maildetail': 'Taxpayer Details',
+        'full_legal_cd': 'Legal Description',
+        'sales': 'Sales History',
+        'permit_ck_cc': 'Building Permits'
+    };
+    return names[modeCode] || modeCode;
+  };
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-4xl mx-auto w-full">
+    <div className="max-w-5xl mx-auto w-full space-y-8">
       
-      {/* Upgraded Property Overview Card */}
-      <div className="bg-white p-6 rounded-xl border border-gray-200 shadow-sm col-span-1 md:col-span-2">
-        <div className="flex flex-col md:flex-row md:items-start justify-between gap-4 border-b border-gray-100 pb-6 mb-6">
-          <div>
-            <div className="flex items-center gap-2 text-gray-500 mb-2">
-              <MapPin className="w-4 h-4" />
-              <span className="text-sm font-medium uppercase tracking-wider">Property Location</span>
-            </div>
-            <h2 className="text-2xl font-bold text-gray-900">{meta?.address || 'Address Unknown'}</h2>
-            <p className="text-gray-600 mt-1">
-              {meta?.city || 'City Unknown'} • {meta?.propertyClass}
-            </p>
-          </div>
-          <div className="text-left md:text-right">
-            <span className="inline-block px-3 py-1 bg-slate-100 text-slate-800 rounded-md text-sm font-mono border border-slate-200">
-              PIN: {parcelId}
-            </span>
-            {meta?.isExempt && (
-              <span className="block mt-3 px-3 py-1 bg-amber-50 text-amber-700 rounded-md text-sm font-medium border border-amber-200">
-                Tax Exempt Property
-              </span>
-            )}
-          </div>
-        </div>
-
-        {/* New Extended Data Grid */}
+      {/* Header Banner */}
+      <div className="bg-slate-900 text-white p-6 rounded-xl shadow-lg flex justify-between items-center">
         <div>
-          <div className="flex items-center gap-2 text-gray-500 mb-4">
-            <FileText className="w-4 h-4" />
-            <h3 className="font-semibold uppercase tracking-wider text-sm">Extended Profile Data</h3>
-          </div>
-          
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-y-4 gap-x-8">
-            <DataPoint label="Tax / Pay Year" value={`${meta?.taxYear} / ${meta?.payYear}`} />
-            <DataPoint label="Neighborhood" value={meta?.neighborhood} />
-            <DataPoint label="Tax District" value={meta?.taxDistrict} />
-            <DataPoint label="Town Name" value={meta?.townName} />
-            <DataPoint label="Tri-Town" value={meta?.triTown} />
-            <DataPoint label="Multiple Addresses" value={meta?.multipleAddresses} />
-            <DataPoint label="Building/Unit" value={meta?.buildingUnit || 'None'} />
-            <DataPoint label="Key PIN" value={meta?.keyPin} />
-          </div>
+           <h2 className="text-2xl font-bold">Property PIN: {parcelId}</h2>
+           <p className="text-slate-400 mt-1">
+             {tabs.profileall_cc?.['Property Address'] || 'Address Unknown'} • {tabs.profileall_cc?.['City & Zip Code']}
+           </p>
         </div>
+        {tabs.profileall_cc?.['Class']?.includes('EX') && (
+            <span className="px-4 py-2 bg-amber-500/20 text-amber-300 rounded-md border border-amber-500/30 font-medium">
+                Exempt Property
+            </span>
+        )}
       </div>
 
-      {/* Taxpayer Card (Keep your existing code here) */}
-      {/* ... */}
+      {/* Dynamic Data Grids */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        {Object.entries(tabs).map(([modeName, fields]) => (
+          
+          <div key={modeName} className="bg-white p-6 rounded-xl border border-gray-200 shadow-sm">
+            <div className="flex items-center gap-2 text-gray-500 border-b border-gray-100 pb-4 mb-4">
+              <Database className="w-5 h-5 text-blue-600" />
+              <h3 className="font-semibold text-lg text-gray-900">{formatTabName(modeName)}</h3>
+            </div>
+            
+            <div className="space-y-3">
+              {Object.entries(fields).map(([label, value]) => (
+                <div key={label} className="grid grid-cols-3 gap-4 text-sm">
+                  <span className="col-span-1 text-gray-500 font-medium">{label}</span>
+                  <span className="col-span-2 text-gray-900">{value}</span>
+                </div>
+              ))}
+            </div>
+          </div>
 
-      {/* Latest Sale Card (Keep your existing code here) */}
-      {/* ... */}
+        ))}
+      </div>
 
-    </div>
-  );
-}
-
-// A clean, reusable sub-component for your data grid
-function DataPoint({ label, value }) {
-  return (
-    <div className="flex flex-col">
-      <span className="text-xs text-gray-500 font-medium uppercase tracking-wider mb-1">{label}</span>
-      <span className="text-sm text-gray-900 font-medium">{value && value !== '----' ? value : 'N/A'}</span>
     </div>
   );
 }
