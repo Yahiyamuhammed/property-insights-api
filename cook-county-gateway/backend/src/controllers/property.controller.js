@@ -1,4 +1,5 @@
-import { fetchProfileTab } from '../services/scraper.service.js';
+// In backend/src/controllers/property.controller.js
+import { fetchPropertyData } from '../services/scraper.service.js';
 
 export const getPropertyDetails = async (req, res) => {
     try {
@@ -7,7 +8,8 @@ export const getPropertyDetails = async (req, res) => {
             return res.status(400).json({ success: false, message: "Valid PIN required" });
         }
 
-        const data = await fetchProfileTab(pin);
+        // Call the newly upgraded function
+        const data = await fetchPropertyData(pin); 
         
         res.status(200).json({ success: true, data });
     } catch (error) {
