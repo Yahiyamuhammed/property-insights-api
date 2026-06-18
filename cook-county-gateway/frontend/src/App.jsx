@@ -21,7 +21,8 @@ export default function App() {
         setError(response.data.message || 'Property not found.');
       }
     } catch (err) {
-      setError('Failed to connect to the API Gateway. Ensure backend is running.');
+      setError(`Failed to connect to the API Gateway. Ensure backend is running.${err}`);
+
       console.error(err);
     } finally {
       setLoading(false);
